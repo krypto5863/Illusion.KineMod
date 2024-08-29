@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.10.34928.147
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HS2_KineMode", "Illusion_IKNodesExtended\HS2_KineMode.csproj", "{F565C7B8-2703-4158-B829-97C30D3A1337}"
-EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Core_KineMod", "Core_KineMod\Core_KineMod.shproj", "{FB3C9FDD-DC13-4268-A53A-BE8E3B4B7B46}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KKS_KineMod", "KKS_KineMod\KKS_KineMod.csproj", "{9BA5F1DC-8686-4EF5-AA8D-B4BDF8D44814}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HS2_KineMode", "HS2_KineMod\HS2_KineMode.csproj", "{F565C7B8-2703-4158-B829-97C30D3A1337}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,14 +15,14 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{F565C7B8-2703-4158-B829-97C30D3A1337}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F565C7B8-2703-4158-B829-97C30D3A1337}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F565C7B8-2703-4158-B829-97C30D3A1337}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F565C7B8-2703-4158-B829-97C30D3A1337}.Release|Any CPU.Build.0 = Release|Any CPU
 		{9BA5F1DC-8686-4EF5-AA8D-B4BDF8D44814}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{9BA5F1DC-8686-4EF5-AA8D-B4BDF8D44814}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9BA5F1DC-8686-4EF5-AA8D-B4BDF8D44814}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9BA5F1DC-8686-4EF5-AA8D-B4BDF8D44814}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F565C7B8-2703-4158-B829-97C30D3A1337}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F565C7B8-2703-4158-B829-97C30D3A1337}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F565C7B8-2703-4158-B829-97C30D3A1337}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F565C7B8-2703-4158-B829-97C30D3A1337}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
