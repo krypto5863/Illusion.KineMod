@@ -17,6 +17,11 @@ using UnityEngine.UI;
 #pragma warning restore CS0618 // Type or member is obsolete
 
 [BepInPlugin(GUID, DisplayName, Version)]
+#if HS2
+	[BepInProcess("StudioNEOV2")]
+#else
+	[BepInProcess("CharaStudio")]
+#endif
 internal class KineMod : BaseUnityPlugin
 {
 	public const string GUID = "KineMod";
