@@ -1,0 +1,38 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.10.34928.147
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HS2_KineMode", "Illusion_IKNodesExtended\HS2_KineMode.csproj", "{F565C7B8-2703-4158-B829-97C30D3A1337}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Core_KineMod", "Core_KineMod\Core_KineMod.shproj", "{FB3C9FDD-DC13-4268-A53A-BE8E3B4B7B46}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KKS_KineMod", "KKS_KineMod\KKS_KineMod.csproj", "{9BA5F1DC-8686-4EF5-AA8D-B4BDF8D44814}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F565C7B8-2703-4158-B829-97C30D3A1337}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F565C7B8-2703-4158-B829-97C30D3A1337}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F565C7B8-2703-4158-B829-97C30D3A1337}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F565C7B8-2703-4158-B829-97C30D3A1337}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9BA5F1DC-8686-4EF5-AA8D-B4BDF8D44814}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9BA5F1DC-8686-4EF5-AA8D-B4BDF8D44814}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9BA5F1DC-8686-4EF5-AA8D-B4BDF8D44814}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9BA5F1DC-8686-4EF5-AA8D-B4BDF8D44814}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {3B2D03D4-D0CA-4A40-854E-7A8610A71F70}
+	EndGlobalSection
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		Core_KineMod\Core_KineMod.projitems*{9ba5f1dc-8686-4ef5-aa8d-b4bdf8d44814}*SharedItemsImports = 4
+		Core_KineMod\Core_KineMod.projitems*{f565c7b8-2703-4158-b829-97c30d3a1337}*SharedItemsImports = 4
+		Core_KineMod\Core_KineMod.projitems*{fb3c9fdd-dc13-4268-a53a-be8e3b4b7b46}*SharedItemsImports = 13
+	EndGlobalSection
+EndGlobal

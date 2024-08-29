@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects Condition="'$(MSBuildVersion)' == '' Or '$(MSBuildVersion)' &lt; '16.0'">$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>fb3c9fdd-dc13-4268-a53a-be8e3b4b7b46</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>Core_KineMod</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)IMGUIResources\CustomGUIStyle\Button.png" />
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)IMGUIResources\CustomGUIStyle\ButtonClick.png" />
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)IMGUIResources\CustomGUIStyle\ButtonHover.png" />
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)IMGUIResources\CustomGUIStyle\HorizontalSliderBackground.png" />
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)IMGUIResources\CustomGUIStyle\ScrollerBackground.png" />
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)IMGUIResources\CustomGUIStyle\ScrollerHandle.png" />
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)IMGUIResources\CustomGUIStyle\StudioUIImage.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)IMGUIResources\CustomGUIStyle\Styles.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Extensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)HooksPatches.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)KineMod.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)KineModController.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)IMGUIResources\EffectorPage.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)IMGUIResources\KineModWindow.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)IMGUIResources\MainPage.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)IMGUIResources\UiToolbox.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)UGUIResources\KineModWindow.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)UGUIResources\ValueMonitor.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)UGUIResources\KineModUILogic.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)UGUIResources\kinemodui" />
+  </ItemGroup>
+</Project>
