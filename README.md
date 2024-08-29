@@ -24,4 +24,4 @@ However, if you made scenes or poses that have IK on but really poses with FK, y
 # Effectors?
 Effectors control the effect an IK target has over the pose. When you set all effectors to 1, you basically pin the joint to the IK target. This is unfortunate because FinalIK is very advanced and can sometimes pose better than you can if you let it, since it has it's own defined joint angle limits. A pose that might take you several minutes, could take you less if you loosen your effectors and just move the one you want, allowing the body to follow the joint's movement. Below is an example of the pulling effect you can achieve when you just let the hand effector influence the pose.
 
-[CharaStudio_0IDcnxzZGj.webm](https://github.com/user-attachments/assets/16f7cef2-715f-4312-8201-f7e04a343bab)
+[CharaStudio_wRR8S7fKe4.webm](https://github.com/user-attachments/assets/25cce515-e53c-460e-97b0-66f06590ad1a)
