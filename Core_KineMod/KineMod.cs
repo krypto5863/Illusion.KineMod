@@ -7,6 +7,7 @@ using Studio;
 using System;
 using System.Security;
 using System.Security.Permissions;
+using Core_KineMod.IMGUIResources;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
