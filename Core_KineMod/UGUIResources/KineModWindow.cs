@@ -224,7 +224,7 @@ namespace Core_KineMod.UGUIResources
 				}
 				finally
 				{
-					assetBundle.Unload(false);
+					assetBundle?.Unload(false);
 				}
 			}
 			catch
@@ -600,12 +600,12 @@ namespace Core_KineMod.UGUIResources
 			#region CustomFK
 
 			{
-				var customFKSection = Instantiate(templateSection, templateSection.transform.parent);
-				customFKSection.name = "CustomFK";
-				var customFKText = customFKSection.transform.FindLoop("HeaderText").GetComponent<TextMeshProUGUI>();
-				customFKText.text = "Custom FK";
+				var customFkSection = Instantiate(templateSection, templateSection.transform.parent);
+				customFkSection.name = "CustomFK";
+				var customFkText = customFkSection.transform.FindLoop("HeaderText").GetComponent<TextMeshProUGUI>();
+				customFkText.text = "Custom FK";
 
-				var templateToggle = customFKSection.transform.FindLoop("TemplateToggle");
+				var templateToggle = customFkSection.transform.FindLoop("TemplateToggle");
 
 				foreach (var customGroup in KineModController.NodeGroupIds)
 				{
@@ -646,13 +646,13 @@ namespace Core_KineMod.UGUIResources
 					label.text = customGroup.Key;
 				}
 
-				var massToggles = customFKSection.transform.FindLoop("MassToggles");
+				var massToggles = customFkSection.transform.FindLoop("MassToggles");
 				var onButton = massToggles.transform.FindLoop("On").GetComponent<Button>();
 				var offButton = massToggles.transform.FindLoop("Off").GetComponent<Button>();
 
 				onButton.onClick.AddListener(() =>
 				{
-					var toggles = customFKSection.gameObject.GetComponentsInChildren<Toggle>();
+					var toggles = customFkSection.gameObject.GetComponentsInChildren<Toggle>();
 					foreach (var toggle in toggles)
 					{
 						toggle.isOn = true;
@@ -661,7 +661,7 @@ namespace Core_KineMod.UGUIResources
 
 				offButton.onClick.AddListener(() =>
 				{
-					var toggles = customFKSection.gameObject.GetComponentsInChildren<Toggle>();
+					var toggles = customFkSection.gameObject.GetComponentsInChildren<Toggle>();
 					foreach (var toggle in toggles)
 					{
 						toggle.isOn = false;
@@ -670,7 +670,7 @@ namespace Core_KineMod.UGUIResources
 
 				templateToggle.gameObject.SetActive(false);
 
-				customFKSection.gameObject.SetActive(true);
+				customFkSection.gameObject.SetActive(true);
 			}
 
 			#endregion
