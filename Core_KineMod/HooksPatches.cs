@@ -30,6 +30,18 @@ public static class Hooks
 			}
 		}
 	}
+
+	[HarmonyPostfix]
+	[HarmonyPatch(typeof(OCIChar), "ActiveFKGroup")]
+	public static void FixNeckPoint(ref OCIChar __instance, OIBoneInfo.BoneGroup __0, bool __1)
+	{
+		if (__0 == OIBoneInfo.BoneGroup.Neck && __1)
+		{
+			//This lets FK pose the neck.
+			__instance.ChangeLookNeckPtn(3);
+		}
+	}
+
 }
 public static class FkCtrlPatch
 {

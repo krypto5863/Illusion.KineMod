@@ -50,14 +50,14 @@ internal class KineModController : CharaCustomFunctionController
 	public static readonly Dictionary<string, string> NodeGroupIds = new Dictionary<string, string>
 	{
 		{ "Clavicle", "Clavicle" },
-		{ "L. Arm", "LeftArm" },
 		{ "R. Arm", "RightArm" },
+		{ "L. Arm", "LeftArm" },
 #if HS2
 		{ "Upper Body", "UpperBody" },
 #endif
 		{ "Spine", "Spine" },
-		{ "L. Leg", "LeftLeg" },
 		{ "R. Leg", "RightLeg" },
+		{ "L. Leg", "LeftLeg" },
 #if HS2
 		{ "Feet", "Feet" },
 #endif
@@ -141,6 +141,11 @@ internal class KineModController : CharaCustomFunctionController
 			if (dataEntry.Key.Equals(nameof(SystemActive)))
 			{
 				SystemActive = (bool)dataEntry.Value;
+
+				if (SystemActive)
+				{
+					KineMod.EnableFkIk(ChaControl.GetOCIChar());
+				}
 			}
 			else if (dataEntry.Key.Equals(nameof(CustomNodeGroups)))
 			{
@@ -204,11 +209,6 @@ internal class KineModController : CharaCustomFunctionController
 		foreach (var groupKey in CustomNodeGroups)
 		{
 			SetBonesInArray(groupKey.Value.BoneNameStrings, groupKey.Value.State);
-		}
-
-		if (SystemActive)
-		{
-			KineMod.EnableFkIk(ChaControl.GetOCIChar());
 		}
 	}
 

@@ -7,6 +7,7 @@ using Studio;
 using System;
 using System.Security;
 using System.Security.Permissions;
+using BepInEx.Configuration;
 using Core_KineMod.IMGUIResources;
 using TMPro;
 using UnityEngine;
@@ -25,12 +26,14 @@ using UnityEngine.UI;
 #endif
 internal class KineMod : BaseUnityPlugin
 {
-	public const string GUID = "KineMod";
+	public const string GUID = "com.krypto.plugin.kinemod";
 	public const string DisplayName = "KineMod";
 	public const string Version = "1.0";
 
 	internal static KineMod PluginInstance;
 	internal static ManualLogSource PluginLogger => PluginInstance.Logger;
+
+	internal static ConfigEntry<float> UiPanelScale;
 
 	private static MPCharCtrl _charCtrl;
 	private static GameObject _fakeMenuObject;
@@ -40,6 +43,18 @@ internal class KineMod : BaseUnityPlugin
 		PluginInstance = this;
 		Harmony.CreateAndPatchAll(typeof(FkCtrlPatch));
 		Harmony.CreateAndPatchAll(typeof(Hooks));
+
+		UiPanelScale = Config.Bind("UI", "UI Scale Multiplier", 1.0f,  new ConfigDescription("Will change the scale of the UI", new AcceptableValueRange<float>(0.1f,2f)));
+		UiPanelScale.SettingChanged += (value, eventArg) =>
+		{
+			var menuObject = Core_KineMod.UGUIResources.KineModWindow.MenuGameObject;
+			if (!menuObject)
+			{
+				return;
+			}
+			menuObject.transform.localScale = Vector3.one * UiPanelScale.Value; 
+		};
+
 		//CharacterApi.CharacterReloaded += CharacterApiOnCharacterReloaded;
 		StudioAPI.StudioLoadedChanged += StudioAPI_StudioLoadedChanged;
 		CharacterApi.RegisterExtraBehaviour<KineModController>(GUID);

@@ -86,7 +86,7 @@ namespace Core_KineMod.UGUIResources
 
 
 
-		private static GameObject _menuGameObject;
+		internal static GameObject MenuGameObject { get; private set; }
 		private static MPCharCtrl _charCtrl;
 		private static MPCharCtrl CharCtrl 
 		{
@@ -113,10 +113,12 @@ namespace Core_KineMod.UGUIResources
 				return false;
 			}
 
-			if (SetupUi(uiPanel, out _menuGameObject) == false)
+			if (SetupUi(uiPanel, out var menuGameObject) == false)
 			{
 				return false;
 			}
+
+			MenuGameObject = menuGameObject;
 
 			if (CreateKinematicsButton() == false)
 			{
@@ -246,6 +248,10 @@ namespace Core_KineMod.UGUIResources
 
 			var kineMenu = GameObject.Find("StudioScene/Canvas Main Menu/02_Manipulate/00_Chara/02_Kinematic");
 			modPanel.transform.SetParent(kineMenu.transform);
+
+			var fkMenu = GameObject.Find("StudioScene/Canvas Main Menu/02_Manipulate/00_Chara/02_Kinematic/00_FK");
+			modPanel.transform.position = fkMenu.transform.position;
+			modPanel.transform.localScale = Vector3.one * KineMod.UiPanelScale.Value;
 
 			SetupMainPage(modPanel);
 
@@ -438,6 +444,12 @@ namespace Core_KineMod.UGUIResources
 			systemActive.onValueChanged.AddListener((value) =>
 			{
 				var controller = CharCtrl.ociChar.charInfo.GetComponent<KineModController>();
+
+				if (controller.SystemActive == value)
+				{
+					return;
+				}
+
 				controller.SystemActive = value;
 				if (value)
 				{
@@ -464,6 +476,12 @@ namespace Core_KineMod.UGUIResources
 			{
 				CharCtrl.SetCopyBoneIK((BoneGroup)31);
 				CharCtrl.SetCopyBoneFK((BoneGroup)353);
+			});
+
+			var ikToFkButton = modPanel.transform.FindLoop("IKToFK").GetComponentInChildren<Button>();
+			ikToFkButton.onClick.AddListener(() =>
+			{
+				CharCtrl.CopyBoneFK((BoneGroup)353);
 			});
 
 			KineMod.PluginLogger.LogDebug("Setting up FK section...");
@@ -739,7 +757,7 @@ namespace Core_KineMod.UGUIResources
 
 				existingButtons.onClick.AddListener(delegate
 				{
-					_menuGameObject.SetActive(false);
+					MenuGameObject.SetActive(false);
 					button.image.color = Color.white;
 				});
 			}
@@ -764,7 +782,7 @@ namespace Core_KineMod.UGUIResources
 				}
 
 				CharCtrl.kinematic = -1;
-				_menuGameObject.SetActive(true);
+				MenuGameObject.SetActive(true);
 				button.image.color = Color.green;
 			});
 
