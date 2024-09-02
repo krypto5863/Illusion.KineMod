@@ -66,17 +66,6 @@ namespace Core_KineMod.UGUIResources
 		private static void SetupBendGoalSliderCluster(string limb, Slider posSlider,
 			GameObject rotSliderUnit)
 		{
-			//posSlider.onValueChanged.AddListener(value => ViewModel.BendGoalSliderChanged(limb, value));
-			/*
-			ValueMonitor.AddMonitor(posSlider.gameObject, () =>
-			{
-				var effector = CharCtrl.ociChar.GetBendGoalByTargetName(limb);
-				if (Math.Abs(effector.weight - posSlider.value) > 0.01)
-				{
-					posSlider.value = effector.weight;
-				}
-			});
-			*/
 			SliderSynchronizer.AddMonitor(posSlider, () => Controller.BendGoals[limb], f =>
 			{
 				Controller.ChangeBendGoalWeight(limb, f);
@@ -87,24 +76,12 @@ namespace Core_KineMod.UGUIResources
 		private static void SetupEffectorSliderCluster(string limb, Slider posSlider, Slider rotSlider,
 			GameObject rotSliderUnit, bool hasRotation)
 		{
-			//posSlider.onValueChanged.AddListener(value => ViewModel.PositionSliderChanged(limb, value));
 			SliderSynchronizer.AddMonitor(posSlider, () => Controller.Effectors[limb][0], f =>
 			{
 				Controller.ChangeEffectorWeight(limb, f, false);
 			});
-			/*
-			ValueMonitor.AddMonitor(posSlider.gameObject, () =>
-			{
-				var effector = CharCtrl.ociChar.GetEffectorByTargetName(limb);
-				if (Math.Abs(effector.positionWeight - posSlider.value) > 0.01)
-				{
-					posSlider.value = effector.positionWeight;
-				}
-			});
-			*/
 			if (hasRotation)
 			{
-				//rotSlider.onValueChanged.AddListener(value => ViewModel.RotationSliderChanged(limb, value));
 				SliderSynchronizer.AddMonitor(rotSlider, () => Controller.Effectors[limb][1], f =>
 				{
 					Controller.ChangeEffectorWeight(limb, f, true);
@@ -114,21 +91,6 @@ namespace Core_KineMod.UGUIResources
 			{
 				rotSliderUnit.SetActive(false);
 			}
-			/*
-			ValueMonitor.AddMonitor(rotSlider.gameObject, () =>
-			{
-				var effector = CharCtrl.ociChar.GetEffectorByTargetName(limb);
-				if (effector.isEndEffector == false)
-				{
-					rotSliderUnit.gameObject.SetActive(false);
-				}
-
-				if (Math.Abs(effector.rotationWeight - rotSlider.value) > 0.01)
-				{
-					rotSlider.value = effector.rotationWeight;
-				}
-			});
-			*/
 		}
 
 		private static void InitSliderText(Slider slider)

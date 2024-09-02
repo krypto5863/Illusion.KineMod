@@ -11,9 +11,10 @@ using UnityEngine;
 internal class KineModController : CharaCustomFunctionController
 {
 	public Dictionary<string, CustomBoneGroup> CustomNodeGroups { get; private set; } =
-		CustomBoneGroup.BoneNames.ToDictionary(
-			kvp => kvp.Key, // Key is the original key (e.g., "Clavicle")
-			kvp => new CustomBoneGroup(kvp.Key) // Value is the corresponding ID (e.g., "Clavicle")
+			CustomBoneGroup.BoneNames
+			.ToDictionary(
+			kvp => kvp.Key,
+			kvp => new CustomBoneGroup(kvp.Key)
 		);
 
 	public Dictionary<string, float[]> Effectors = EffectorsInfo.BonesInfo
