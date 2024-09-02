@@ -1,11 +1,11 @@
-﻿using BepInEx.Bootstrap;
-using Core_KineMod.UGUIResources;
+﻿using Core_KineMod.UGUIResources;
 using ExtensibleSaveFormat;
 using KKAPI;
 using KKAPI.Chara;
 using KKAPI.Studio;
 using System.Collections.Generic;
 using System.Linq;
+using BepInEx.Bootstrap;
 using UnityEngine;
 
 internal class KineModController : CharaCustomFunctionController
@@ -26,55 +26,20 @@ internal class KineModController : CharaCustomFunctionController
 
 	public bool SystemActive { get; set; }
 	public bool EnforceEffectors { get; set; }
-
-	protected override void Start()
-	{
-		base.Start();
-		foreach (var effector in ChaControl.GetOCIChar().finalIK.solver.effectors)
-		{
-			KineMod.PluginLogger.LogDebug($"Found effector {effector.target.name}");
-		}
-	}
 	protected override void Update()
 	{
 		base.Update();
-		var charInfo = ChaControl.GetOCIChar().oiCharInfo;
-		if (SystemActive && (charInfo.enableFK && charInfo.enableIK) == false
-#if KKS
-			&& !checkForCoordianteLoadOption() // prevent disabling of SystemActive during Coordinate Load Option load
-#endif
-			)
 		var character = ChaControl.GetOCIChar();
-
-		var charInfo = character.oiCharInfo;
-		if (SystemActive && (charInfo.enableFK && charInfo.enableIK) == false)
+		var oiCharInfo = character.oiCharInfo;
+		if (SystemActive && (oiCharInfo.enableFK && oiCharInfo.enableIK) == false)
 		{
-			SystemActive = false;
-		}
-	}
-
 #if KKS
-	/// <summary>
-	/// Checks if Coordiante Load Option is currenlty being used
-	/// </summary>
-	/// <returns>True if CLO is used</returns>
-	private bool checkForCoordianteLoadOption()
-	{
-		if (StudioAPI.InsideStudio && Chainloader.PluginInfos.ContainsKey("com.jim60105.kks.coordinateloadoption"))
-		{
-			GameObject CLOpanelobject = GameObject.Find("CoordinateTooglePanel");
-			if (CLOpanelobject != null && CLOpanelobject.activeInHierarchy) return true;
-		}
-		return false;
-	}
-
-	protected override void OnCoordinateBeingLoaded(ChaFileCoordinate coordinate)
-	{
-		// compatibility with Coordinate Load Option
-		if (checkForCoordianteLoadOption() && SystemActive)
-		{
-			KineMod.EnableFkIk(ChaControl.GetOCIChar());
-			KineMod.PluginLogger.LogDebug($"Renabled because of Coordiante Load Option");
+			if (IsCoordinateLoadOption())
+			{
+				return;
+			}
+#endif
+			SystemActive = false;
 		}
 
 		foreach (var effector in character.finalIK.solver.effectors)
@@ -85,9 +50,6 @@ internal class KineModController : CharaCustomFunctionController
 				continue;
 			}
 
-		base.OnCoordinateBeingLoaded(coordinate);
-	}
-#endif
 			if (EnforceEffectors)
 			{
 				effector.positionWeight = values[0];
@@ -121,6 +83,35 @@ internal class KineModController : CharaCustomFunctionController
 			}
 		}
 	}
+
+#if KKS
+	/// <summary>
+	/// Checks if Coordinate Load Option is currently being used
+	/// </summary>
+	/// <returns>True if CLO is used</returns>
+	private static bool IsCoordinateLoadOption()
+	{
+		if (!Chainloader.PluginInfos.ContainsKey("com.jim60105.kks.coordinateloadoption"))
+		{
+			return false;
+		}
+
+		var cloPanelObject = GameObject.Find("CoordinateTogglePanel");
+		return cloPanelObject?.activeInHierarchy == true;
+	}
+
+	protected override void OnCoordinateBeingLoaded(ChaFileCoordinate coordinate)
+	{
+		//Compatibility with Coordinate Load Option
+		if (SystemActive && IsCoordinateLoadOption())
+		{
+			KineMod.EnableFkIk(ChaControl.GetOCIChar());
+			KineMod.PluginLogger.LogDebug("Enabled because of Coordinate Load Option");
+		}
+
+		base.OnCoordinateBeingLoaded(coordinate);
+	}
+#endif
 	protected override void OnCardBeingSaved(GameMode currentGameMode)
 	{
 		if (currentGameMode != GameMode.Studio)
