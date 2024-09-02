@@ -34,12 +34,14 @@ internal class KineModController : CharaCustomFunctionController
 		if (SystemActive && (oiCharInfo.enableFK && oiCharInfo.enableIK) == false)
 		{
 #if KKS
-			if (IsCoordinateLoadOption())
+			if (!IsCoordinateLoadOption())
 			{
-				return;
+				SystemActive = false;
 			}
-#endif
+#else
 			SystemActive = false;
+#endif
+			
 		}
 
 		foreach (var effector in character.finalIK.solver.effectors)
