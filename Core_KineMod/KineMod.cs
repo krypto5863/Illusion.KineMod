@@ -1,5 +1,7 @@
 ﻿using BepInEx;
+using BepInEx.Configuration;
 using BepInEx.Logging;
+using Core_KineMod.IMGUIResources;
 using HarmonyLib;
 using KKAPI.Chara;
 using KKAPI.Studio;
@@ -7,8 +9,6 @@ using Studio;
 using System;
 using System.Security;
 using System.Security.Permissions;
-using BepInEx.Configuration;
-using Core_KineMod.IMGUIResources;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -18,15 +18,15 @@ using UnityEngine.UI;
 [assembly: SecurityPermission(SecurityAction.RequestMinimum, SkipVerification = true)]
 #pragma warning restore CS0618 // Type or member is obsolete
 
-[BepInPlugin(GUID, DisplayName, Version)]
+[BepInPlugin(Guid, DisplayName, Version)]
 #if HS2
-	[BepInProcess("StudioNEOV2")]
+[BepInProcess("StudioNEOV2")]
 #else
-	[BepInProcess("CharaStudio")]
+[BepInProcess("CharaStudio")]
 #endif
 internal class KineMod : BaseUnityPlugin
 {
-	public const string GUID = "com.krypto.plugin.kinemod";
+	public const string Guid = "com.krypto.plugin.kinemod";
 	public const string DisplayName = "KineMod";
 	public const string Version = "1.0";
 
@@ -44,7 +44,7 @@ internal class KineMod : BaseUnityPlugin
 		Harmony.CreateAndPatchAll(typeof(FkCtrlPatch));
 		Harmony.CreateAndPatchAll(typeof(Hooks));
 
-		UiPanelScale = Config.Bind("UI", "UI Scale Multiplier", 1.0f,  new ConfigDescription("Will change the scale of the UI", new AcceptableValueRange<float>(0.1f,2f)));
+		UiPanelScale = Config.Bind("UI", "UI Scale Multiplier", 1.0f, new ConfigDescription("Will change the scale of the UI", new AcceptableValueRange<float>(0.1f, 2f)));
 		UiPanelScale.SettingChanged += (value, eventArg) =>
 		{
 			var menuObject = Core_KineMod.UGUIResources.KineModWindow.MenuGameObject;
@@ -52,12 +52,12 @@ internal class KineMod : BaseUnityPlugin
 			{
 				return;
 			}
-			menuObject.transform.localScale = Vector3.one * UiPanelScale.Value; 
+			menuObject.transform.localScale = Vector3.one * UiPanelScale.Value;
 		};
 
 		//CharacterApi.CharacterReloaded += CharacterApiOnCharacterReloaded;
 		StudioAPI.StudioLoadedChanged += StudioAPI_StudioLoadedChanged;
-		CharacterApi.RegisterExtraBehaviour<KineModController>(GUID);
+		CharacterApi.RegisterExtraBehaviour<KineModController>(Guid);
 	}
 
 	private static void StudioAPI_StudioLoadedChanged(object sender, EventArgs e)
@@ -185,7 +185,7 @@ internal class KineMod : BaseUnityPlugin
 
 		for (var i = 0; i < FKCtrl.parts.Length; i++)
 		{
-			//Toggle off then on if applicable.
+			//ToggleSynchronizer off then on if applicable.
 			character.ActiveFK(FKCtrl.parts[i], false, true);
 			character.ActiveFK(FKCtrl.parts[i], character.oiCharInfo.activeFK[i]);
 		}

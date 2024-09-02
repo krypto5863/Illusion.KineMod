@@ -1,7 +1,7 @@
-﻿using Studio;
+﻿using RootMotion.FinalIK;
+using Studio;
 using System;
 using System.Linq;
-using RootMotion.FinalIK;
 using UniRx;
 using UniRx.Triggers;
 

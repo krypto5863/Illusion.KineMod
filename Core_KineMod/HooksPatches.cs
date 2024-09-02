@@ -41,7 +41,6 @@ public static class Hooks
 			__instance.ChangeLookNeckPtn(3);
 		}
 	}
-
 }
 public static class FkCtrlPatch
 {

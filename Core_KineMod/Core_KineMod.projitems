@@ -18,17 +18,23 @@
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)IMGUIResources\CustomGUIStyle\StudioUIImage.png" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)CustomBoneGroup.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IMGUIResources\CustomGUIStyle\Styles.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Extensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)HooksPatches.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)KineMod.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)KineModController.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)IMGUIResources\EffectorPage.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)IMGUIResources\EffectorsPage.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IMGUIResources\KineModWindow.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IMGUIResources\MainPage.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IMGUIResources\UiToolbox.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)EffectorsInfo.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)UGUIResources\EffectorsPage.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)UGUIResources\KineModWindow.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)UGUIResources\ValueMonitor.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)UGUIResources\MainPage.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)UGUIResources\ToggleSynchronizer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)UGUIResources\SliderSynchronizer.cs" />
+    <None Include="$(MSBuildThisFileDirectory)UGUIResources\ValueMonitor.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)UGUIResources\KineModUILogic.dll" />

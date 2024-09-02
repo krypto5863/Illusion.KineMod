@@ -10,7 +10,7 @@ namespace Core_KineMod.IMGUIResources
 		internal static void EatInputInRect(Rect eatRect)
 		{
 			if (eatRect.Contains(new Vector2(UnityInput.Current.mousePosition.x,
-				    Screen.height - UnityInput.Current.mousePosition.y)))
+					Screen.height - UnityInput.Current.mousePosition.y)))
 			{
 				UnityInput.Current.ResetInputAxes();
 			}
@@ -126,11 +126,11 @@ namespace Core_KineMod.IMGUIResources
 				{
 					var topLeft = (i == 0 && (j == 0 || j == 1)) || (j == 0 && (i == 0 || i == 1));
 					var bottomLeft = (i == 0 && (j == (xy - 1) || j == (xy - 2))) ||
-					                 (j == (xy - 1) && (i == 0 || i == 1));
+									 (j == (xy - 1) && (i == 0 || i == 1));
 					var topRight = (i == (xy - 1) && (j == 0 || j == 1)) ||
-					               (j == 0 && (i == (xy - 1) || i == (xy - 2)));
+								   (j == 0 && (i == (xy - 1) || i == (xy - 2)));
 					var bottomRight = (i == (xy - 1) && (j == (xy - 1) || j == (xy - 2))) ||
-					                  (j == (xy - 1) && (i == (xy - 1) || i == (xy - 2)));
+									  (j == (xy - 1) && (i == (xy - 1) || i == (xy - 2)));
 
 					//Corner
 					if (topLeft || topRight || bottomLeft || bottomRight)
@@ -139,8 +139,8 @@ namespace Core_KineMod.IMGUIResources
 					}
 					//Border
 					else if (i == 0 || j == 0 || i == (xy - 1) || j == (xy - 1) ||
-					         (i == 1 && j == 1) || (i == (xy - 2) && j == 1) || (i == 1 && j == (xy - 2)) ||
-					         (i == (xy - 2) && j == (xy - 2)))
+							 (i == 1 && j == 1) || (i == (xy - 2) && j == 1) || (i == 1 && j == (xy - 2)) ||
+							 (i == (xy - 2) && j == (xy - 2)))
 					{
 						result.SetPixels(i, j, 1, 1, new[] { Color.black });
 					}
@@ -213,7 +213,7 @@ namespace Core_KineMod.IMGUIResources
 				{
 					//Border
 					if (i == 0 || j == 0 || i == (x - 1) || j == (y - 1) ||
-					    brdrS.ToList().Exists(p => p.X == i && p.Y == j))
+						brdrS.ToList().Exists(p => p.X == i && p.Y == j))
 					{
 						result.SetPixels(i, j, 1, 1, new[] { Color.black });
 					}

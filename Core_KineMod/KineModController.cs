@@ -1,4 +1,4 @@
-﻿using System;
+﻿using Core_KineMod.UGUIResources;
 using ExtensibleSaveFormat;
 using KKAPI;
 using KKAPI.Chara;
@@ -6,87 +6,85 @@ using KKAPI.Studio;
 using System.Collections.Generic;
 using System.Linq;
 
-internal class CustomNodeGroup
-{
-	public static readonly Dictionary<string, string[]> BoneNames = new Dictionary<string, string[]>
-		{
-			//Common
-			{"Clavicle", new []{"cf_j_Shoulder_R", "cf_j_Shoulder_L"}},
-			{"Spine", new []{"cf_j_Spine01", "cf_j_Spine02"}},
-#if HS2
-			{"LeftArm", new []{"cf_j_armup00_L", "cf_j_armlow01_L", "cf_j_hand_L"}},
-			{"RightArm", new []{"cf_j_armup00_R", "cf_j_armlow01_R", "cf_j_hand_R"}},
-			{"UpperBody", new []{"cf_j_Spine03"}},
-			{"Waist", new []{"cf_j_kosi01"}},
-			{"Hips", new []{"cf_j_kosi02"}},
-			{"LeftLeg", new []{"cf_j_foot01_L", "cf_j_leglow01_L", "cf_j_legup00_L"}},
-			{"RightLeg", new []{"cf_j_foot01_R", "cf_j_leglow01_R", "cf_j_legup00_R"}},
-			{"Feet", new []{"cf_j_Foot02_R", "cf_j_Foot02_L"}},
-			{"Toes", new []{"cf_j_Toes01_R", "cf_j_Toes01_L"}},
-#else
-			{"LeftArm", new []{"cf_j_arm00_L", "cf_j_forearm01_L", "cf_j_hand_L"}},
-			{"RightArm", new []{"cf_j_arm00_R", "cf_j_forearm01_R", "cf_j_hand_R"}},
-			{"Waist", new []{"cf_j_waist01"}},
-			{"LeftLeg", new []{"cf_j_leg01_L", "cf_j_leg03_L", "cf_j_thigh00_L"}},
-			{"RightLeg", new []{"cf_j_leg01_R", "cf_j_leg03_R", "cf_j_thigh00_R"}},
-			{"Toes", new []{"cf_j_Toes_R", "cf_j_Toes_L"}}
-#endif
-		};
-	public string[] BoneNameStrings => BoneNames[Name];
-	public readonly string Name;
-	public bool State;
-	public CustomNodeGroup(string name)
-	{
-		Name = name;
-	}
-}
 internal class KineModController : CharaCustomFunctionController
 {
-	//Done: Define a dictionary for easier iteration through custom groupings.
-	//Done: Add state definition
-	//Done: Handle effector weights.
-	// Step 1: Create the Reference Dictionary
-	public static readonly Dictionary<string, string> NodeGroupIds = new Dictionary<string, string>
-	{
-		{ "Clavicle", "Clavicle" },
-		{ "R. Arm", "RightArm" },
-		{ "L. Arm", "LeftArm" },
-#if HS2
-		{ "Upper Body", "UpperBody" },
-#endif
-		{ "Spine", "Spine" },
-		{ "Waist", "Waist" },
-#if HS2
-		{ "Hips", "Hips" },
-#endif
-		{ "R. Leg", "RightLeg" },
-		{ "L. Leg", "LeftLeg" },
-#if HS2
-		{ "Feet", "Feet" },
-#endif
-		{ "Toes", "Toes" },
-	};
-
-	// Step 2: Initialize the CustomNodeGroups using the Reference Dictionary
-	public Dictionary<string, CustomNodeGroup> CustomNodeGroups { get; private set; } =
-		NodeGroupIds.ToDictionary(
+	public Dictionary<string, CustomBoneGroup> CustomNodeGroups { get; private set; } =
+		CustomBoneGroup.BoneNames.ToDictionary(
 			kvp => kvp.Key, // Key is the original key (e.g., "Clavicle")
-			kvp => new CustomNodeGroup(kvp.Value) // Value is the corresponding ID (e.g., "Clavicle")
+			kvp => new CustomBoneGroup(kvp.Key) // Value is the corresponding ID (e.g., "Clavicle")
 		);
 
+	public Dictionary<string, float[]> Effectors = EffectorsInfo.BonesInfo
+		.Where(d => d.Value.IsBendGoal == false)
+		.ToDictionary(m => m.Key, r => new[] { 0f, 0f });
+
+	public Dictionary<string, float> BendGoals = EffectorsInfo.BonesInfo
+		.Where(d => d.Value.IsBendGoal)
+		.ToDictionary(m => m.Key, r => 0f);
 
 	public bool SystemActive { get; set; }
+	public bool EnforceEffectors { get; set; }
 
+	protected override void Start()
+	{
+		base.Start();
+		foreach (var effector in ChaControl.GetOCIChar().finalIK.solver.effectors)
+		{
+			KineMod.PluginLogger.LogDebug($"Found effector {effector.target.name}");
+		}
+	}
 	protected override void Update()
 	{
 		base.Update();
-		var charInfo = ChaControl.GetOCIChar().oiCharInfo;
+		var character = ChaControl.GetOCIChar();
+
+		var charInfo = character.oiCharInfo;
 		if (SystemActive && (charInfo.enableFK && charInfo.enableIK) == false)
 		{
 			SystemActive = false;
 		}
-	}
 
+		foreach (var effector in character.finalIK.solver.effectors)
+		{
+			var effectorName = effector.target.name;
+			if (!Effectors.TryGetValue(effectorName, out var values))
+			{
+				continue;
+			}
+
+			if (EnforceEffectors)
+			{
+				effector.positionWeight = values[0];
+				effector.rotationWeight = values[1];
+			}
+			else
+			{
+				values[0] = effector.positionWeight;
+				values[1] = effector.rotationWeight;
+			}
+		}
+
+		foreach (var chain in character.finalIK.solver.chain)
+		{
+			var bendConstraint = chain.bendConstraint;
+			if (bendConstraint.bendGoal == null)
+			{
+				continue;
+			}
+			if (!BendGoals.TryGetValue(bendConstraint.bendGoal.name, out var weight))
+			{
+				continue;
+			}
+			if (EnforceEffectors)
+			{
+				bendConstraint.weight = weight;
+			}
+			else
+			{
+				BendGoals[bendConstraint.bendGoal.name] = bendConstraint.weight;
+			}
+		}
+	}
 	protected override void OnCardBeingSaved(GameMode currentGameMode)
 	{
 		if (currentGameMode != GameMode.Studio)
@@ -103,20 +101,17 @@ internal class KineModController : CharaCustomFunctionController
 						nameof(SystemActive), SystemActive
 					},
 					{
+						nameof(EnforceEffectors), EnforceEffectors
+					},
+					{
 						nameof(CustomNodeGroups),
 						CustomNodeGroups.ToDictionary(r => r.Key, m => m.Value.State)
 					},
 					{
-						"Effectors",
-						ChaControl.GetOCIChar().finalIK.solver.effectors
-							.Where(d => d.target?.name != null)
-							.ToDictionary(m => m.target.name, r => new[]{r.positionWeight, r.rotationWeight})
+						"Effectors", Effectors
 					},
 					{
-						"BendGoals",
-						ChaControl.GetOCIChar().finalIK.solver.chain
-							.Where(r => r.bendConstraint?.bendGoal != null)
-							.ToDictionary(m => m.bendConstraint.bendGoal.name, r => r.bendConstraint.weight)
+						"BendGoals", BendGoals
 					}
 				}
 		};
@@ -150,9 +145,13 @@ internal class KineModController : CharaCustomFunctionController
 					KineMod.EnableFkIk(ChaControl.GetOCIChar());
 				}
 			}
+			else if (dataEntry.Key.Equals(nameof(EnforceEffectors)))
+			{
+				EnforceEffectors = (bool)dataEntry.Value;
+			}
 			else if (dataEntry.Key.Equals(nameof(CustomNodeGroups)))
 			{
-				var nodeSettings = dataEntry.Value as Dictionary<object, object>;
+				var nodeSettings = (Dictionary<object, object>)dataEntry.Value;
 
 				foreach (var keyPair in nodeSettings)
 				{
@@ -161,50 +160,23 @@ internal class KineModController : CharaCustomFunctionController
 			}
 			else if (dataEntry.Key.Equals("Effectors"))
 			{
-				if (dataEntry.Value is Dictionary<object, object> effectorWeights == false)
+				var effectors = (Dictionary<object, object>)dataEntry.Value;
+				foreach (var effectorVal in effectors)
 				{
-					continue;
-				}
-
-				foreach (var effector in ChaControl.GetOCIChar().finalIK.solver.effectors)
-				{
-					if (effector?.target?.name == null)
-					{
-						continue;
-					}
-					if (!effectorWeights.TryGetValue(effector.target.name, out var value))
-					{
-						continue;
-					}
-
-					if (!(value is object[] objectArray))
-					{
-						continue;
-					}
-
-					effector.positionWeight = (float)objectArray[0];
-					effector.rotationWeight = (float)objectArray[1];
+					var effectorKey = (string)effectorVal.Key;
+					var effectorValues = (object[])effectorVal.Value;
+					ChangeEffectorWeight(effectorKey, (float)effectorValues[0], false);
+					ChangeEffectorWeight(effectorKey, (float)effectorValues[1], true);
 				}
 			}
 			else if (dataEntry.Key.Equals("BendGoals"))
 			{
-				if (!(dataEntry.Value is Dictionary<object, object> bendGoalWeights))
+				var bendGoals = (Dictionary<object, object>)dataEntry.Value;
+				foreach (var bendGoal in bendGoals)
 				{
-					continue;
-				}
-
-				foreach (var chain in ChaControl.GetOCIChar().finalIK.solver.chain)
-				{
-					if (chain.bendConstraint?.bendGoal?.name == null)
-					{
-						continue;
-					}
-
-					if (!bendGoalWeights.TryGetValue(chain.bendConstraint.bendGoal.name, out var value))
-					{
-						continue;
-					}
-					chain.bendConstraint.weight = (float)value;
+					var bendGoalTarget = (string)bendGoal.Key;
+					var bendGoalWeight = (float)bendGoal.Value;
+					ChangeBendGoalWeight(bendGoalTarget, bendGoalWeight);
 				}
 			}
 		}
@@ -213,7 +185,67 @@ internal class KineModController : CharaCustomFunctionController
 		{
 			SetBonesInArray(groupKey.Value.BoneNameStrings, groupKey.Value.State);
 		}
-			}
+	}
+	internal void ChangeSystemState(bool state)
+	{
+		SystemActive = state;
+		if (SystemActive)
+		{
+			KineMod.EnableFkIk(ChaControl.GetOCIChar());
+		}
+		else
+		{
+			KineMod.DisableFkIk(ChaControl.GetOCIChar());
+		}
+	}
+	internal void ChangeEnforceEffectors(bool state)
+	{
+		EnforceEffectors = state;
+	}
+	internal void ChangeCustomBoneState(string groupString, bool state)
+	{
+		if (!CustomNodeGroups.TryGetValue(groupString, out var groupValue))
+		{
+			return;
+		}
+
+		groupValue.State = state;
+		foreach (var boneName in groupValue.BoneNameStrings)
+		{
+			ChaControl.GetOCIChar().SetFkBoneState(boneName, groupValue.State);
+		}
+	}
+	internal void ChangeEffectorWeight(string target, float value, bool rotation)
+	{
+		var effector = ChaControl.GetOCIChar().GetEffectorByTargetName(target);
+		if (effector == null || !Effectors.TryGetValue(target, out var values))
+		{
+			return;
+		}
+
+		if (rotation)
+		{
+			effector.rotationWeight = value;
+			values[1] = value;
+		}
+		else
+		{
+			effector.positionWeight = value;
+			values[0] = value;
+		}
+	}
+
+	internal void ChangeBendGoalWeight(string target, float value)
+	{
+		var bendGoal = ChaControl.GetOCIChar().GetBendGoalByTargetName(target);
+		if (bendGoal == null || !BendGoals.ContainsKey(target))
+		{
+			return;
+		}
+
+		bendGoal.weight = value;
+		BendGoals[target] = value;
+	}
 
 	private void SetBonesInArray(string[] boneNames, bool active)
 	{

@@ -1,5 +1,5 @@
-﻿using System;
-using Studio;
+﻿using Studio;
+using System;
 using UnityEngine;
 using static Studio.OIBoneInfo;
 
@@ -222,7 +222,7 @@ namespace Core_KineMod.IMGUIResources
 			GUILayout.EndHorizontal();
 		}
 
-		private static void DisplayCustomToggleReset(MPCharCtrl mCharCtrl, string text, CustomNodeGroup nodeGroup)
+		private static void DisplayCustomToggleReset(MPCharCtrl mCharCtrl, string text, CustomBoneGroup nodeGroup)
 		{
 			var character = mCharCtrl.ociChar;
 			GUILayout.BeginHorizontal();

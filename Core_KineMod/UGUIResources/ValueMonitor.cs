@@ -14,6 +14,9 @@ namespace Core_KineMod.UGUIResources
 			return valueMonitor;
 		}
 
-		private void Update() => _checkFunc.Invoke();
+		private void Update()
+		{
+			_checkFunc?.Invoke();
+		}
 	}
 }

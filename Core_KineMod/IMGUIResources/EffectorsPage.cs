@@ -1,29 +1,29 @@
-﻿using System.Collections.Generic;
+﻿using Studio;
+using System.Collections.Generic;
 using System.Linq;
-using Studio;
 using UnityEngine;
 
 //Todo: Overhaul effector menu
 namespace Core_KineMod.IMGUIResources
 {
-	internal static class EffectorPage
+	internal static class EffectorsPage
 	{
 		private static readonly Dictionary<object, string> BonesUserFriendlyNames = new Dictionary<object, string>
 		{
 #if HS2
-		{ "f_t_shoulder_r(work)", "R. Shoulder" },
-		{ "f_t_shoulder_l(work)", "L. Shoulder" },
-		{ "f_t_elbo_r(work)", "R. Elbow" },
-		{ "f_t_elbo_l(work)", "L. Elbow" },
-		{ "f_t_arm_r(work)", "R. Hand" },
-		{ "f_t_arm_l(work)", "L. Hand" },
-		{ "f_t_hips(work)", "Waist" },
-		{ "f_t_thigh_r(work)", "R. Hips" },
-		{ "f_t_thigh_l(work)", "L. Hips" },
-		{ "f_t_knee_r(work)", "R. Knee" },
-		{ "f_t_knee_l(work)", "L. Knee" },
-		{ "f_t_leg_r(work)", "R. Foot" },
-		{ "f_t_leg_l(work)", "L. Foot" },
+			{ "f_t_shoulder_r(work)", "R. Shoulder" },
+			{ "f_t_shoulder_l(work)", "L. Shoulder" },
+			{ "f_t_elbo_r(work)", "R. Elbow" },
+			{ "f_t_elbo_l(work)", "L. Elbow" },
+			{ "f_t_arm_r(work)", "R. Hand" },
+			{ "f_t_arm_l(work)", "L. Hand" },
+			{ "f_t_hips(work)", "Waist" },
+			{ "f_t_thigh_r(work)", "R. Hips" },
+			{ "f_t_thigh_l(work)", "L. Hips" },
+			{ "f_t_knee_r(work)", "R. Knee" },
+			{ "f_t_knee_l(work)", "L. Knee" },
+			{ "f_t_leg_r(work)", "R. Foot" },
+			{ "f_t_leg_l(work)", "L. Foot" },
 #else
 			{ "cf_t_shoulder_r(work)", "R. Shoulder" },
 			{ "cf_t_shoulder_l(work)", "L. Shoulder" },

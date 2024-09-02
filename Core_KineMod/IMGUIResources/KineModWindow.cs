@@ -46,7 +46,7 @@ namespace Core_KineMod.IMGUIResources
 			}
 			else if (_toolBarSelection == 1)
 			{
-				EffectorPage.Draw(character);
+				EffectorsPage.Draw(character);
 			}
 
 			GUILayout.EndScrollView();
