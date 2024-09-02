@@ -1,4 +1,5 @@
-﻿using ExtensibleSaveFormat;
+﻿using System;
+using ExtensibleSaveFormat;
 using KKAPI;
 using KKAPI.Chara;
 using KKAPI.Studio;
@@ -9,27 +10,25 @@ internal class CustomNodeGroup
 {
 	public static readonly Dictionary<string, string[]> BoneNames = new Dictionary<string, string[]>
 		{
+			//Common
 			{"Clavicle", new []{"cf_j_Shoulder_R", "cf_j_Shoulder_L"}},
+			{"Spine", new []{"cf_j_Spine01", "cf_j_Spine02"}},
 #if HS2
 			{"LeftArm", new []{"cf_j_armup00_L", "cf_j_armlow01_L", "cf_j_hand_L"}},
 			{"RightArm", new []{"cf_j_armup00_R", "cf_j_armlow01_R", "cf_j_hand_R"}},
 			{"UpperBody", new []{"cf_j_Spine03"}},
-#elif KKS
-			{"LeftArm", new []{"cf_j_arm00_L", "cf_j_forearm01_L", "cf_j_hand_L"}},
-			{"RightArm", new []{"cf_j_arm00_R", "cf_j_forearm01_R", "cf_j_hand_R"}},
-#endif
-			{"Spine", new []{"cf_j_Spine01", "cf_j_Spine02"}},
-#if HS2
+			{"Waist", new []{"cf_j_kosi01"}},
+			{"Hips", new []{"cf_j_kosi02"}},
 			{"LeftLeg", new []{"cf_j_foot01_L", "cf_j_leglow01_L", "cf_j_legup00_L"}},
 			{"RightLeg", new []{"cf_j_foot01_R", "cf_j_leglow01_R", "cf_j_legup00_R"}},
-#elif KKS
-			{"LeftLeg", new []{"cf_j_leg01_L", "cf_j_leg03_L", "cf_j_thigh00_L"}},
-			{"RightLeg", new []{"cf_j_leg01_R", "cf_j_leg03_R", "cf_j_thigh00_R"}},
-#endif
-#if HS2
 			{"Feet", new []{"cf_j_Foot02_R", "cf_j_Foot02_L"}},
 			{"Toes", new []{"cf_j_Toes01_R", "cf_j_Toes01_L"}},
-#elif KKS
+#else
+			{"LeftArm", new []{"cf_j_arm00_L", "cf_j_forearm01_L", "cf_j_hand_L"}},
+			{"RightArm", new []{"cf_j_arm00_R", "cf_j_forearm01_R", "cf_j_hand_R"}},
+			{"Waist", new []{"cf_j_waist01"}},
+			{"LeftLeg", new []{"cf_j_leg01_L", "cf_j_leg03_L", "cf_j_thigh00_L"}},
+			{"RightLeg", new []{"cf_j_leg01_R", "cf_j_leg03_R", "cf_j_thigh00_R"}},
 			{"Toes", new []{"cf_j_Toes_R", "cf_j_Toes_L"}}
 #endif
 		};
@@ -56,6 +55,10 @@ internal class KineModController : CharaCustomFunctionController
 		{ "Upper Body", "UpperBody" },
 #endif
 		{ "Spine", "Spine" },
+		{ "Waist", "Waist" },
+#if HS2
+		{ "Hips", "Hips" },
+#endif
 		{ "R. Leg", "RightLeg" },
 		{ "L. Leg", "LeftLeg" },
 #if HS2
@@ -210,7 +213,7 @@ internal class KineModController : CharaCustomFunctionController
 		{
 			SetBonesInArray(groupKey.Value.BoneNameStrings, groupKey.Value.State);
 		}
-	}
+			}
 
 	private void SetBonesInArray(string[] boneNames, bool active)
 	{
