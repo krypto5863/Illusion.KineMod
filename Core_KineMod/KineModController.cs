@@ -1,10 +1,12 @@
-﻿using Core_KineMod.UGUIResources;
+﻿using BepInEx.Bootstrap;
+using Core_KineMod.UGUIResources;
 using ExtensibleSaveFormat;
 using KKAPI;
 using KKAPI.Chara;
 using KKAPI.Studio;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 
 internal class KineModController : CharaCustomFunctionController
 {
@@ -36,12 +38,43 @@ internal class KineModController : CharaCustomFunctionController
 	protected override void Update()
 	{
 		base.Update();
+		var charInfo = ChaControl.GetOCIChar().oiCharInfo;
+		if (SystemActive && (charInfo.enableFK && charInfo.enableIK) == false
+#if KKS
+			&& !checkForCoordianteLoadOption() // prevent disabling of SystemActive during Coordinate Load Option load
+#endif
+			)
 		var character = ChaControl.GetOCIChar();
 
 		var charInfo = character.oiCharInfo;
 		if (SystemActive && (charInfo.enableFK && charInfo.enableIK) == false)
 		{
 			SystemActive = false;
+		}
+	}
+
+#if KKS
+	/// <summary>
+	/// Checks if Coordiante Load Option is currenlty being used
+	/// </summary>
+	/// <returns>True if CLO is used</returns>
+	private bool checkForCoordianteLoadOption()
+	{
+		if (StudioAPI.InsideStudio && Chainloader.PluginInfos.ContainsKey("com.jim60105.kks.coordinateloadoption"))
+		{
+			GameObject CLOpanelobject = GameObject.Find("CoordinateTooglePanel");
+			if (CLOpanelobject != null && CLOpanelobject.activeInHierarchy) return true;
+		}
+		return false;
+	}
+
+	protected override void OnCoordinateBeingLoaded(ChaFileCoordinate coordinate)
+	{
+		// compatibility with Coordinate Load Option
+		if (checkForCoordianteLoadOption() && SystemActive)
+		{
+			KineMod.EnableFkIk(ChaControl.GetOCIChar());
+			KineMod.PluginLogger.LogDebug($"Renabled because of Coordiante Load Option");
 		}
 
 		foreach (var effector in character.finalIK.solver.effectors)
@@ -52,6 +85,9 @@ internal class KineModController : CharaCustomFunctionController
 				continue;
 			}
 
+		base.OnCoordinateBeingLoaded(coordinate);
+	}
+#endif
 			if (EnforceEffectors)
 			{
 				effector.positionWeight = values[0];
