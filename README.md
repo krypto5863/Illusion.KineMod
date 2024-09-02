@@ -13,8 +13,9 @@ Originally this all started as a mere attempt at making the clavicle FK bones us
 # Installation
 Grab the corresponding DLL for your game in the releases and place it into Bepinex/plugins.
 
-Not really compatible with FKIK, simply because it replaces it. But they can co-exist.
-AdvIK's shoulder functions should not be used if you plan to use FK clavicle controls.
+- Not really compatible with FKIK, simply because it replaces it. But they can co-exist.
+- AdvIK's shoulder functions should not be used if you plan to use FK clavicle controls.
+- Update your Stiletto plugin! Older versions of Stiletto are not compatible!
 
 # IK & FK?
 FK does not play nice with IK, using FK will render IK useless. This is because FK makes it's pose changes after IK has solved the pose. The result is IK is basically overwritten. To solve this, I patched the FK controller to force it to change the pose before IK has read the pose, allowing both to work perfectly, though FK does now have deference to IK.
