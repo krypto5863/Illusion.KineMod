@@ -29,8 +29,15 @@ internal class KineModController : CharaCustomFunctionController
 	protected override void Update()
 	{
 		base.Update();
+
+		//Avoids a possible null ref when doing stuff.
 		var character = ChaControl.GetOCIChar();
-		var oiCharInfo = character.oiCharInfo;
+		var oiCharInfo = character?.oiCharInfo;
+		if (oiCharInfo == null)
+		{
+			return;
+		}
+
 		if (SystemActive && (oiCharInfo.enableFK && oiCharInfo.enableIK) == false)
 		{
 #if KKS
@@ -39,6 +46,7 @@ internal class KineModController : CharaCustomFunctionController
 				SystemActive = false;
 			}
 #else
+
 			SystemActive = false;
 #endif
 			
@@ -98,17 +106,18 @@ internal class KineModController : CharaCustomFunctionController
 			return false;
 		}
 
-		var cloPanelObject = GameObject.Find("CoordinateTogglePanel");
-		return cloPanelObject?.activeInHierarchy == true;
+		var cloPanelObject = GameObject.Find("CoordinateTooglePanel");
+		return cloPanelObject != null && cloPanelObject.activeInHierarchy;
 	}
-
 	protected override void OnCoordinateBeingLoaded(ChaFileCoordinate coordinate)
 	{
+		KineMod.PluginLogger.LogDebug("Checking if CLO is active...");
+
 		//Compatibility with Coordinate Load Option
 		if (SystemActive && IsCoordinateLoadOption())
 		{
+			KineMod.PluginLogger.LogDebug("CLO active, re-enabling system.");
 			KineMod.EnableFkIk(ChaControl.GetOCIChar());
-			KineMod.PluginLogger.LogDebug("Enabled because of Coordinate Load Option");
 		}
 
 		base.OnCoordinateBeingLoaded(coordinate);
