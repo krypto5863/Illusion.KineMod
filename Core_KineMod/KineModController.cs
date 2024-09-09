@@ -19,14 +19,14 @@ internal class KineModController : CharaCustomFunctionController
 
 	public Dictionary<string, float[]> Effectors = EffectorsInfo.BonesInfo
 		.Where(d => d.Value.IsBendGoal == false)
-		.ToDictionary(m => m.Key, r => new[] { 0f, 0f });
+		.ToDictionary(m => m.Key, r => new[] { 1f, 1f });
 
 	public Dictionary<string, float> BendGoals = EffectorsInfo.BonesInfo
 		.Where(d => d.Value.IsBendGoal)
-		.ToDictionary(m => m.Key, r => 0f);
+		.ToDictionary(m => m.Key, r => 1f);
 
 	public bool SystemActive { get; set; }
-	public bool EnforceEffectors { get; set; }
+	public bool EnforceEffectors { get; set; } = true;
 	protected override void Update()
 	{
 		base.Update();
@@ -157,7 +157,7 @@ internal class KineModController : CharaCustomFunctionController
 
 		SetExtendedData(pluginData);
 	}
-	protected override void OnReload(GameMode currentGameMode, bool mainState)
+	protected override void OnReload(GameMode currentGameMode)
 	{
 		if (currentGameMode != GameMode.Studio)
 		{

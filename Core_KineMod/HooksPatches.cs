@@ -4,11 +4,13 @@ using Studio;
 using System;
 using System.Collections.Generic;
 
-public static class Hooks
+internal static class Hooks
 {
+	internal static bool CharacterChanging { get; private set; }
+
 	[HarmonyPostfix]
 	[HarmonyPatch(typeof(OCIChar), "ActiveFK")]
-	public static void EnforceCustomBones(OCIChar __instance)
+	private static void EnforceCustomBones(OCIChar __instance)
 	{
 		var nodeController = __instance.charInfo.GetComponent<KineModController>();
 
@@ -33,7 +35,7 @@ public static class Hooks
 
 	[HarmonyPostfix]
 	[HarmonyPatch(typeof(OCIChar), "ActiveFKGroup")]
-	public static void FixNeckPoint(ref OCIChar __instance, OIBoneInfo.BoneGroup __0, bool __1)
+	private static void FixNeckPoint(ref OCIChar __instance, OIBoneInfo.BoneGroup __0, bool __1)
 	{
 		if (__0 == OIBoneInfo.BoneGroup.Neck && __1)
 		{
@@ -41,21 +43,47 @@ public static class Hooks
 			__instance.ChangeLookNeckPtn(3);
 		}
 	}
+
+	[HarmonyPrefix]
+	[HarmonyPatch(typeof(OCIChar), "ChangeChara")]
+	private static void TrackChangeChara(OCIChar __instance)
+	{
+		var controller = __instance.charInfo.GetComponentInChildren<KineModController>();
+		CharacterChanging = controller && controller.SystemActive;
+
+		KineMod.PluginLogger.LogDebug($"Chara change, will reset? {CharacterChanging}");
+	}
+
+	[HarmonyPostfix]
+	[HarmonyPatch(typeof(OCIChar), "ChangeChara")]
+	private static void ActOnChangeChara(OCIChar __instance)
+	{
+		if (!CharacterChanging)
+		{
+			return;
+		}
+
+		KineMod.PluginLogger.LogDebug($"Chara change, now resetting.");
+
+		CharacterChanging = false;
+		var controller = __instance.charInfo.GetComponentInChildren<KineModController>();
+		controller.ChangeSystemState(true);
+	}
 }
-public static class FkCtrlPatch
+internal static class FkCtrlPatch
 {
 	private static readonly Dictionary<FKCtrl, FullBodyBipedIK> FkSlaveToIk = new Dictionary<FKCtrl, FullBodyBipedIK>();
 
 	[HarmonyReversePatch]
 	[HarmonyPatch(typeof(FKCtrl), "LateUpdate")]
-	public static void FakeLateUpdate(FKCtrl instance)
+	private static void FakeLateUpdate(FKCtrl instance)
 	{
 		throw new NotImplementedException("It's a stub");
 	}
 
 	[HarmonyPrefix]
 	[HarmonyPatch(typeof(FKCtrl), "LateUpdate")]
-	public static bool ConditionLateUpdate(FKCtrl __instance)
+	private static bool ConditionLateUpdate(FKCtrl __instance)
 	{
 		if (FkSlaveToIk.TryGetValue(__instance, out var value))
 		{
@@ -67,7 +95,7 @@ public static class FkCtrlPatch
 
 	[HarmonyPostfix]
 	[HarmonyPatch(typeof(FKCtrl), "InitBones")]
-	public static void SubToIkPreUpdate(FKCtrl __instance)
+	private static void SubToIkPreUpdate(FKCtrl __instance)
 	{
 		var finalIk = __instance.gameObject.GetComponentInChildren<FullBodyBipedIK>();
 		finalIk.solver.OnPreRead += () => FakeLateUpdate(__instance);

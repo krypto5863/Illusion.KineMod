@@ -56,6 +56,8 @@ namespace Core_KineMod.UGUIResources
 			{
 				KineModWindow.CharCtrl.CopyBoneFK((BoneGroup)353);
 			});
+			//Disabling for now, really don't see the usage given a proper workflow.
+			ikToFkButton.gameObject.SetActive(false);
 
 			GenerateFkSection(templateSection.gameObject);
 			GenerateIkSection(templateSection.gameObject);
