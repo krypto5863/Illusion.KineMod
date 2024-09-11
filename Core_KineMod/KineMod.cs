@@ -34,6 +34,7 @@ internal class KineMod : BaseUnityPlugin
 	internal static ManualLogSource PluginLogger => PluginInstance.Logger;
 
 	internal static ConfigEntry<float> UiPanelScale;
+	internal static ConfigEntry<bool> PoseableFixedHead;
 
 	private static MPCharCtrl _charCtrl;
 	private static GameObject _fakeMenuObject;
@@ -42,6 +43,7 @@ internal class KineMod : BaseUnityPlugin
 	{
 		PluginInstance = this;
 		Harmony.CreateAndPatchAll(typeof(FkCtrlPatch));
+		Harmony.CreateAndPatchAll(typeof(NeckLookControllerPatch));
 		Harmony.CreateAndPatchAll(typeof(Hooks));
 
 		UiPanelScale = Config.Bind("UI", "UI Scale Multiplier", 1.0f, new ConfigDescription("Will change the scale of the UI", new AcceptableValueRange<float>(0.1f, 2f)));
@@ -54,6 +56,8 @@ internal class KineMod : BaseUnityPlugin
 			}
 			menuObject.transform.localScale = Vector3.one * UiPanelScale.Value;
 		};
+
+		PoseableFixedHead = Config.Bind("General", "Poseable Fixed Head", true, "Allows you to pose the head with FK when the head is set to Fixed. This is the old behavior, not the intended one, but too many scenes use this.");
 
 		//CharacterApi.CharacterReloaded += CharacterApiOnCharacterReloaded;
 		StudioAPI.StudioLoadedChanged += StudioAPI_StudioLoadedChanged;
@@ -149,7 +153,7 @@ internal class KineMod : BaseUnityPlugin
 	internal static void EnableFkIk(OCIChar character)
 	{
 		//Initializing IK stuff
-		var ptnNo = character.neckLookCtrl.ptnNo;
+		//var ptnNo = character.neckLookCtrl.ptnNo;
 		character.oiCharInfo.enableIK = true;
 		character.ActiveIK(OIBoneInfo.BoneGroup.Body, character.oiCharInfo.activeIK[0], true);
 		character.ActiveIK(OIBoneInfo.BoneGroup.RightLeg, character.oiCharInfo.activeIK[1], true);
@@ -165,16 +169,18 @@ internal class KineMod : BaseUnityPlugin
 		{
 			character.ActiveFK(FKCtrl.parts[i], character.oiCharInfo.activeFK[i], true);
 		}
+		/*
 		if (ptnNo != character.neckLookCtrl.ptnNo)
 		{
 			character.ChangeLookNeckPtn(ptnNo);
 		}
+		*/
 	}
 
 	internal static void DisableFkIk(OCIChar character)
 	{
 		//Initializing IK stuff
-		var ptnNo = character.neckLookCtrl.ptnNo;
+		//var ptnNo = character.neckLookCtrl.ptnNo;
 
 		character.oiCharInfo.enableIK = false;
 		character.ActiveKinematicMode(OICharInfo.KinematicMode.IK, false, true);
@@ -189,9 +195,11 @@ internal class KineMod : BaseUnityPlugin
 			character.ActiveFK(FKCtrl.parts[i], false, true);
 			character.ActiveFK(FKCtrl.parts[i], character.oiCharInfo.activeFK[i]);
 		}
+		/*
 		if (ptnNo != character.neckLookCtrl.ptnNo)
 		{
 			character.ChangeLookNeckPtn(ptnNo);
 		}
+		*/
 	}
 }

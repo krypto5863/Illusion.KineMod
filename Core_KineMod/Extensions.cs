@@ -4,6 +4,7 @@ using System;
 using System.Linq;
 using UniRx;
 using UniRx.Triggers;
+using UnityEngine;
 
 internal static class Extensions
 {
@@ -210,5 +211,20 @@ internal static class Extensions
 		}
 
 		return null;
+	}
+
+	public static T GetComponentInParents<T>(this GameObject gameObject)
+	{
+		while (gameObject != null)
+		{
+			var component = gameObject.transform.GetComponent<T>();
+			if (component != null)
+			{
+				return component;
+			}
+			gameObject = gameObject.transform.parent.gameObject;
+		}
+
+		return default;
 	}
 }
