@@ -138,7 +138,7 @@ internal static class FkCtrlPatch
 		//Force an early update to the lookController to maintain it enslaved to FK.
 		if (KineMod.PoseableFixedHead.Value && returnValue && NeckLookControllers.TryGetValue(__instance, out var lookController) && lookController.ptnNo == 4)
 		{
-			KineMod.PluginLogger.LogDebug("Early updating neck, no ik...");
+			//KineMod.PluginLogger.LogDebug("Early updating neck, no ik...");
 			NeckLookControllerPatch.FakeLateUpdate(lookController);
 		}
 	}

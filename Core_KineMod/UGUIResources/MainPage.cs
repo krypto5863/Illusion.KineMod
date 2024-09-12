@@ -76,10 +76,10 @@ namespace Core_KineMod.UGUIResources
 			nodeSection.transform.SetAsLastSibling();
 
 			var fkSlider = nodeSection.transform.FindLoop("FK").GetComponentInChildren<Slider>();
-			KineMod.PluginLogger.LogDebug("Doing Slider MinMax");
+			//KineMod.PluginLogger.LogDebug("Doing Slider MinMax");
 			fkSlider.minValue = 0.1f;
 			fkSlider.maxValue = 1;
-			KineMod.PluginLogger.LogDebug("Done with Slider MinMax");
+			//KineMod.PluginLogger.LogDebug("Done with Slider MinMax");
 			SliderSynchronizer.AddMonitor(fkSlider, () => KineModWindow.CharCtrl.fkInfo.sliderSize.value, f =>
 			{
 				KineModWindow.CharCtrl.fkInfo.sliderSize.value = f;
