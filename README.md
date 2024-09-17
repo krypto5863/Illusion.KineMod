@@ -4,6 +4,7 @@ A simple plugin meant mostly for us IK users who have noticed there's a painful 
 - IK can now work with FK.
 - Toggle individual FK bones such as clavicle, toes, etc,.
 - Easy to use control over the IK effectors.
+- SOON: MotionTimeline Support
 
 [CharaStudio_0IDcnxzZGj.webm](https://github.com/user-attachments/assets/329785b3-5195-46d2-9d61-53199e009921)
 
