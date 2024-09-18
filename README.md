@@ -14,7 +14,7 @@ Originally this all started as a mere attempt at making the clavicle FK bones us
 # Installation
 Grab the corresponding DLL for your game in the releases and place it into Bepinex/plugins.
 
-- Not really compatible with FKIK, simply because it replaces it. But they can co-exist.
+- Not compatible, it'll cause some resets here and there.
 - AdvIK's shoulder functions should not be used if you plan to use FK clavicle controls.
 - Update your Stiletto plugin! Older versions of Stiletto are not compatible!
 
