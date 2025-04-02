@@ -4,6 +4,16 @@ using Studio;
 using System;
 using System.Collections.Generic;
 
+internal static class ExtraFKNodes
+{
+	[HarmonyPostfix]
+	[HarmonyPatch(typeof(Info), nameof(Info.LoadBoneInfo))]
+	private static void EnforceCustomBones(ref Dictionary<int, Info.BoneInfo> __1)
+	{
+		KineMod.AddExtraFKBones(ref __1);
+	}
+}
+
 internal static class Hooks
 {
 	internal static bool CharacterChanging { get; private set; }

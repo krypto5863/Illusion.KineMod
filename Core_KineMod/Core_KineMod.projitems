@@ -19,6 +19,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)CustomBoneGroup.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CustomBoneNode.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IMGUIResources\CustomGUIStyle\Styles.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Extensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)HooksPatches.cs" />

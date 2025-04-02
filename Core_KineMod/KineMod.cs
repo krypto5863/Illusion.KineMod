@@ -1,17 +1,19 @@
 ﻿using BepInEx;
 using BepInEx.Configuration;
 using BepInEx.Logging;
-using Core_KineMod.IMGUIResources;
+using Core_KineMod.UGUIResources;
 using HarmonyLib;
 using KKAPI.Chara;
 using KKAPI.Studio;
 using Studio;
 using System;
+using System.Collections.Generic;
 using System.Security;
 using System.Security.Permissions;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using KineModWindow = Core_KineMod.IMGUIResources.KineModWindow;
 
 [module: UnverifiableCode]
 #pragma warning disable CS0618 // Type or member is obsolete
@@ -24,6 +26,7 @@ using UnityEngine.UI;
 #else
 [BepInProcess("CharaStudio")]
 #endif
+[BepInIncompatibility("com.deathweasel.bepinex.fkik")]
 internal class KineMod : BaseUnityPlugin
 {
 	public const string Guid = "com.krypto.plugin.kinemod";
@@ -42,6 +45,8 @@ internal class KineMod : BaseUnityPlugin
 	private void Awake()
 	{
 		PluginInstance = this;
+		//Harmony.CreateAndPatchAll(typeof(FKPositionalPatch));
+		Harmony.CreateAndPatchAll(typeof(ExtraFKNodes));
 		Harmony.CreateAndPatchAll(typeof(FkCtrlPatch));
 		Harmony.CreateAndPatchAll(typeof(NeckLookControllerPatch));
 		Harmony.CreateAndPatchAll(typeof(Hooks));
@@ -148,6 +153,33 @@ internal class KineMod : BaseUnityPlugin
 			_fakeMenuObject.SetActive(true);
 			button.image.color = Color.green;
 		});
+	}
+
+	internal static void AddExtraFKBones(ref Dictionary<int, Info.BoneInfo> boneDic)
+	{
+		foreach (var bone in CustomBoneNode.CustomNodes)
+		{
+			var num = bone.Bone.GetHashCode();
+#if KKS
+			boneDic[num] = new Info.BoneInfo()
+			{
+				no = num,
+				bone = bone.Bone,
+				group = bone.Group,
+				level = bone.Level,
+				name = bone.Name
+			};
+#else
+			boneDic[num] = new Info.BoneInfo(num, bone.Bone, new List<string>())
+			{
+				no = num,
+				bone = bone.Bone,
+				group = bone.Group,
+				level = bone.Level,
+				name = bone.Name
+			};
+#endif
+		}
 	}
 
 	internal static void EnableFkIk(OCIChar character)

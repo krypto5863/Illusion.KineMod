@@ -1,17 +1,17 @@
-﻿using Core_KineMod.UGUIResources;
+﻿using BepInEx.Bootstrap;
+using Core_KineMod.UGUIResources;
 using ExtensibleSaveFormat;
 using KKAPI;
 using KKAPI.Chara;
 using KKAPI.Studio;
 using System.Collections.Generic;
 using System.Linq;
-using BepInEx.Bootstrap;
 using UnityEngine;
 
 internal class KineModController : CharaCustomFunctionController
 {
 	public Dictionary<string, CustomBoneGroup> CustomNodeGroups { get; private set; } =
-			CustomBoneGroup.BoneNames
+			CustomBoneInfo.BoneNames
 			.ToDictionary(
 			kvp => kvp.Key,
 			kvp => new CustomBoneGroup(kvp.Key)
@@ -50,7 +50,6 @@ internal class KineModController : CharaCustomFunctionController
 
 			SystemActive = false;
 #endif
-			
 		}
 
 		foreach (var effector in character.finalIK.solver.effectors)

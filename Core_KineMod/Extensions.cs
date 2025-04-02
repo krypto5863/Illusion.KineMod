@@ -15,7 +15,7 @@ internal static class Extensions
 	/// </summary>
 	/// <param name="mpCharCtrl"></param>
 	/// <param name="resetBone"></param>
-	public static void CopyFkBone(this MPCharCtrl mpCharCtrl, string[] resetBone)
+	public static void CopyFkBone(this MPCharCtrl mpCharCtrl, string[] resetBone, bool resetToZero = false)
 	{
 		//KineMod.PluginLogger.LogDebug("Will now attempt single reset!");
 
@@ -31,7 +31,7 @@ internal static class Extensions
 				//KineMod.PluginLogger.LogDebug("Resetting FK Bone...");
 				foreach (var bone in resetBone)
 				{
-					mpCharCtrl.ociChar.fkCtrl.ResetFkBone(bone);
+					mpCharCtrl.ociChar.fkCtrl.ResetFkBone(bone, resetToZero);
 				}
 			}, () =>
 			{
@@ -111,12 +111,18 @@ internal static class Extensions
 		}
 		*/
 	}
-	public static void ResetFkBone(this FKCtrl fkCtrl, string boneName)
+	public static void ResetFkBone(this FKCtrl fkCtrl, string boneName, bool resetToZero = false)
 	{
 		var targetBone = fkCtrl.listBones
 			.First(r => r.gameObject.name.Equals(boneName, StringComparison.OrdinalIgnoreCase));
-
-		targetBone.CopyBone();
+		if (resetToZero == false)
+		{
+			targetBone.CopyBone();
+		}
+		else
+		{
+			targetBone.changeAmount.Reset();
+		}
 	}
 	/*
 	public static bool GetFkBoneGroupState(this OCIChar character, OIBoneInfo.BoneGroup boneGroup)

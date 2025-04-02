@@ -57,7 +57,7 @@ namespace Core_KineMod.UGUIResources
 				KineModWindow.CharCtrl.CopyBoneFK((BoneGroup)353);
 			});
 			//Disabling for now, really don't see the usage given a proper workflow.
-			ikToFkButton.gameObject.SetActive(false);
+			//ikToFkButton.gameObject.SetActive(true);
 
 			GenerateFkSection(templateSection.gameObject);
 			GenerateIkSection(templateSection.gameObject);
@@ -103,26 +103,26 @@ namespace Core_KineMod.UGUIResources
 
 			var templateToggle = customFkSection.transform.FindLoop("TemplateToggle");
 
-			foreach (var customGroup in CustomBoneGroup.BoneNames.Keys)
+			foreach (var customGroup in CustomBoneInfo.BoneNames)
 			{
 				var newToggle = Object.Instantiate(templateToggle, templateToggle.transform.parent);
-				newToggle.name = customGroup;
+				newToggle.name = customGroup.Key;
 
 				var toggle = newToggle.GetComponentInChildren<Toggle>();
-				ToggleSynchronizer.AddMonitor(toggle, () => Controller.CustomNodeGroups[customGroup].State, value =>
+				ToggleSynchronizer.AddMonitor(toggle, () => Controller.CustomNodeGroups[customGroup.Key].State, value =>
 				{
-					Controller.ChangeCustomBoneState(customGroup, value);
+					Controller.ChangeCustomBoneState(customGroup.Key, value);
 				});
 
 				var resetButton = newToggle.GetComponentInChildren<Button>();
 				resetButton.onClick.AddListener(() =>
 				{
-					var nodeGroup = Controller.CustomNodeGroups[customGroup];
-					KineModWindow.CharCtrl.CopyFkBone(nodeGroup.BoneNameStrings);
+					var nodeGroup = Controller.CustomNodeGroups[customGroup.Key];
+					KineModWindow.CharCtrl.CopyFkBone(nodeGroup.BoneNameStrings, customGroup.Value._resetToZero);
 				});
 
 				var label = newToggle.transform.FindLoop("Label").GetComponent<TextMeshProUGUI>();
-				label.text = customGroup;
+				label.text = customGroup.Key;
 			}
 
 			var massToggles = customFkSection.transform.FindLoop("MassToggles");
