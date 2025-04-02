@@ -31,7 +31,7 @@ internal class KineMod : BaseUnityPlugin
 {
 	public const string Guid = "com.krypto.plugin.kinemod";
 	public const string DisplayName = "KineMod";
-	public const string Version = "1.0";
+	public const string Version = "1.1";
 
 	internal static KineMod PluginInstance;
 	internal static ManualLogSource PluginLogger => PluginInstance.Logger;
