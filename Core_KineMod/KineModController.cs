@@ -176,7 +176,7 @@ internal class KineModController : CharaCustomFunctionController
 		}
 
 
-
+#if DEBUG
 		for (var i = 0; i < FKCtrl.parts.Length; i++)
 		{
 			var part = FKCtrl.parts[i];
@@ -184,6 +184,7 @@ internal class KineModController : CharaCustomFunctionController
 
 			KineMod.PluginLogger.LogDebug($"{part.ToString()} is {state} before changes!");
 		}
+#endif
 
 		var dictionary = extData.data;
 
