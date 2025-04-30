@@ -229,6 +229,15 @@ namespace Core_KineMod.UGUIResources
 				var resetButton = newToggle.GetComponentInChildren<Button>();
 				resetButton.onClick.AddListener(() => { KineModWindow.CharCtrl.SetCopyBoneFK(boneGroup.Item1); });
 
+				if (boneGroup.Item1 == BoneGroup.Hair || boneGroup.Item1 == BoneGroup.Skirt)
+				{
+					//Required for their state resets only.
+					resetButton.onClick.AddListener(() =>
+					{
+						KineModWindow.CharCtrl.fkInfo.OnClickInitSingle(boneGroup.Item1);
+					});
+				}
+
 				var label = newToggle.transform.FindLoop("Label").GetComponent<TextMeshProUGUI>();
 				label.text = boneGroup.Item2;
 			}

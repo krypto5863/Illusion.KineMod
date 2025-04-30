@@ -1,11 +1,12 @@
-﻿using BepInEx.Bootstrap;
+﻿using System.Collections.Generic;
+using System.Linq;
+using BepInEx.Bootstrap;
 using Core_KineMod.UGUIResources;
 using ExtensibleSaveFormat;
 using KKAPI;
 using KKAPI.Chara;
 using KKAPI.Studio;
-using System.Collections.Generic;
-using System.Linq;
+using Studio;
 using UnityEngine;
 
 internal class KineModController : CharaCustomFunctionController
@@ -41,6 +42,10 @@ internal class KineModController : CharaCustomFunctionController
 
 		if (SystemActive && (oiCharInfo.enableFK && oiCharInfo.enableIK) == false)
 		{
+#if DEBUG
+			KineMod.PluginLogger.LogDebug("System now inactive due to IK or FK being disabled!");
+#endif
+
 #if KKS
 			if (!IsCoordinateLoadOption())
 			{
@@ -170,6 +175,16 @@ internal class KineModController : CharaCustomFunctionController
 			return;
 		}
 
+
+
+		for (var i = 0; i < FKCtrl.parts.Length; i++)
+		{
+			var part = FKCtrl.parts[i];
+			var state = ChaControl.GetOCIChar().oiCharInfo.activeFK[i];
+
+			KineMod.PluginLogger.LogDebug($"{part.ToString()} is {state} before changes!");
+		}
+
 		var dictionary = extData.data;
 
 		foreach (var dataEntry in dictionary)
@@ -226,6 +241,11 @@ internal class KineModController : CharaCustomFunctionController
 	}
 	internal void ChangeSystemState(bool state)
 	{
+
+#if DEBUG
+		KineMod.PluginLogger.LogDebug($"Changing system state for {ChaFileControl.charaFileName} to {state}.");
+#endif
+
 		SystemActive = state;
 		if (SystemActive)
 		{

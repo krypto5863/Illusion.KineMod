@@ -31,7 +31,7 @@ internal class KineMod : BaseUnityPlugin
 {
 	public const string Guid = "com.krypto.plugin.kinemod";
 	public const string DisplayName = "KineMod";
-	public const string Version = "1.1";
+	public const string Version = "1.2";
 
 	internal static KineMod PluginInstance;
 	internal static ManualLogSource PluginLogger => PluginInstance.Logger;
@@ -184,6 +184,10 @@ internal class KineMod : BaseUnityPlugin
 
 	internal static void EnableFkIk(OCIChar character)
 	{
+#if DEBUG
+		PluginLogger.LogDebug($"Turning on FKIK for {character.charInfo.chaFile.charaFileName}!");
+#endif
+
 		//Initializing IK stuff
 		//var ptnNo = character.neckLookCtrl.ptnNo;
 		character.oiCharInfo.enableIK = true;
@@ -192,6 +196,7 @@ internal class KineMod : BaseUnityPlugin
 		character.ActiveIK(OIBoneInfo.BoneGroup.LeftLeg, character.oiCharInfo.activeIK[2], true);
 		character.ActiveIK(OIBoneInfo.BoneGroup.RightArm, character.oiCharInfo.activeIK[3], true);
 		character.ActiveIK(OIBoneInfo.BoneGroup.LeftArm, character.oiCharInfo.activeIK[4], true);
+		//Todo character.ActiveIK(OIBoneInfo.BoneGroup.Skirt, character.oiCharInfo.activeIK[5], true);
 		character.ActiveKinematicMode(OICharInfo.KinematicMode.IK, true, true);
 
 		//Initializing FK stuff
@@ -199,7 +204,12 @@ internal class KineMod : BaseUnityPlugin
 		character.oiCharInfo.enableFK = true;
 		for (var i = 0; i < FKCtrl.parts.Length; i++)
 		{
-			character.ActiveFK(FKCtrl.parts[i], character.oiCharInfo.activeFK[i], true);
+			var part = FKCtrl.parts[i];
+			var state = character.oiCharInfo.activeFK[i];
+			character.ActiveFK(part, state, true);
+#if DEBUG
+			PluginLogger.LogDebug($"{part.ToString()} is being set to {state}.");
+#endif
 		}
 		/*
 		if (ptnNo != character.neckLookCtrl.ptnNo)
@@ -211,6 +221,10 @@ internal class KineMod : BaseUnityPlugin
 
 	internal static void DisableFkIk(OCIChar character)
 	{
+#if DEBUG
+		PluginLogger.LogDebug($"Turning off FKIK for {character.charInfo.chaFile.charaFileName}!");
+#endif
+
 		//Initializing IK stuff
 		//var ptnNo = character.neckLookCtrl.ptnNo;
 

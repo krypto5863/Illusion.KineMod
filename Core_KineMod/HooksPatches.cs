@@ -97,6 +97,53 @@ internal static class Hooks
 			__instance.buttonMode[i].interactable = true;
 		}
 	}
+
+#if KKS
+	[HarmonyPrefix]
+	[HarmonyPatch(typeof(OCICharFemale), nameof(OCICharFemale.SetCoordinateInfo))]
+	private static void ForceHoldSkirtState(OCICharFemale __instance, out bool __state)
+	{
+		var indexOf = Array.IndexOf(FKCtrl.parts, OIBoneInfo.BoneGroup.Skirt);
+		__state = __instance.oiCharInfo.activeFK[indexOf];
+	}
+
+	[HarmonyPostfix]
+	[HarmonyPatch(typeof(OCICharFemale), nameof(OCICharFemale.SetCoordinateInfo))]
+	private static void ForceHoldSkirtStatePost(OCICharFemale __instance, bool __state)
+	{
+		if (__state == false)
+		{
+			return;
+		}
+
+		var indexOf = Array.IndexOf(FKCtrl.parts, OIBoneInfo.BoneGroup.Skirt);
+		__instance.oiCharInfo.activeFK[indexOf] = __state;
+	}
+#endif
+
+#if DEBUG
+
+	[HarmonyPrefix]
+	[HarmonyPatch(typeof(OCIChar), nameof(OCIChar.ActiveFK))]
+	private static void CheckAfterLoad(OCIChar __instance, OIBoneInfo.BoneGroup __0, bool __1, bool __2)
+	{
+		if (__0 != OIBoneInfo.BoneGroup.Skirt)
+		{
+			return;
+		}
+
+		var indexOf = Array.IndexOf(FKCtrl.parts, __0);
+		var currentState = __instance.oiCharInfo.activeFK[indexOf];
+
+		KineMod.PluginLogger.LogDebug("Kinematic mode changing for group with parameters:" +
+		                              $"\ngroup: {__0.ToString()}" +
+		                              $"\ncurrent state: {currentState}" +
+		                              $"\nnew state: {__1}" +
+		                              $"\nforce: {__2}" +
+		                              $"\n\n{Environment.StackTrace}");
+	}
+
+#endif
 }
 internal static class FkCtrlPatch
 {
