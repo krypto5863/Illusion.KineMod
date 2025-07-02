@@ -35,6 +35,8 @@ namespace Core_KineMod.UGUIResources
 
 		internal static void SetupMainPage(GameObject modPanel)
 		{
+			modPanel = modPanel.transform.FindLoop("MainPage").gameObject;
+
 			var templateSection = modPanel.transform.FindLoop("TemplateSection");
 			templateSection.gameObject.SetActive(false);
 

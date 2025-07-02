@@ -178,7 +178,7 @@ namespace Core_KineMod.UGUIResources
 			modPanel.transform.localScale = Vector3.one * KineMod.UiPanelScale.Value;
 
 			MainPage.SetupMainPage(modPanel);
-
+			HandPage.SetupHandPage(modPanel);
 			EffectorsPage.SetupEffectorsPage(modPanel);
 
 			return true;

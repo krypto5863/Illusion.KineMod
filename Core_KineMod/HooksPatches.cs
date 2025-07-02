@@ -4,6 +4,10 @@ using Studio;
 using System;
 using System.Collections.Generic;
 
+#if HS2
+using AIChara;
+#endif
+
 internal static class ExtraFKNodes
 {
 	[HarmonyPostfix]
@@ -240,5 +244,46 @@ internal static class NeckLookControllerPatch
 		}
 		//KineMod.PluginLogger.LogDebug($"Values for NeckLookUpdateSkip are {fkCtrl == null} {!fkCtrl?.enabled}");
 		return fkCtrl == null || !fkCtrl.enabled;
+	}
+}
+
+internal static class HandBlendHook
+{
+	/*
+	[HarmonyPatch(typeof(OCIChar), nameof(OCIChar.ChangeHandAnime))]
+	[HarmonyPrefix]
+	public static bool ChangeHandAnimeExtended(ref OCIChar __instance, ref int __0, ref int __1)
+	{
+		var handsPlusController = __instance.charInfo.gameObject.GetComponentInChildren<KineModController>();
+
+		var boneGroup = __0 == 0 ? OIBoneInfo.BoneGroup.LeftHand : OIBoneInfo.BoneGroup.RightHand;
+		var handState = handsPlusController.HandStates[boneGroup];
+
+		__instance.oiCharInfo.handPtn[__0] = __1;
+		if (__1 != 0)
+		{
+			__instance.charInfo.SetShapeHandValue(__0, __1, handState.Pattern, handState.Blending);
+		}
+		__instance.charInfo.SetEnableShapeHand(__0, __1 != 0);
+
+		return false;
+	}
+	*/
+	[HarmonyPatch(typeof(ChaControl), nameof(ChaControl.SetShapeHandValue))]
+	[HarmonyPrefix]
+	public static void InjectHandParam(ref ChaControl __instance, ref int __0, ref int __1, ref int __2, ref float __3)
+	{
+		var handsPlusController = __instance.gameObject.GetComponentInChildren<KineModController>();
+
+		if (handsPlusController == null)
+		{
+			return;
+		}
+
+		var boneGroup = __0 == 0 ? OIBoneInfo.BoneGroup.LeftHand : OIBoneInfo.BoneGroup.RightHand;
+		var handState = handsPlusController.HandStates[boneGroup];
+
+		__2 = handState.Pattern;
+		__3 = handState.Blending;
 	}
 }

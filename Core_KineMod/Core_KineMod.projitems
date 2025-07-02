@@ -20,6 +20,7 @@
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)CustomBoneGroup.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CustomBoneNode.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)HandState.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IMGUIResources\CustomGUIStyle\Styles.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Extensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)HooksPatches.cs" />
@@ -31,7 +32,9 @@
     <Compile Include="$(MSBuildThisFileDirectory)IMGUIResources\UiToolbox.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)EffectorsInfo.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)UGUIResources\EffectorsPage.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)UGUIResources\DropDownSynchronizer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)UGUIResources\KineModWindow.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)UGUIResources\HandPage.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)UGUIResources\MainPage.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)UGUIResources\ToggleSynchronizer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)UGUIResources\SliderSynchronizer.cs" />

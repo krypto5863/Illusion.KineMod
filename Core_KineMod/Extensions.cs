@@ -1,10 +1,12 @@
 ﻿using RootMotion.FinalIK;
 using Studio;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using UniRx;
 using UniRx.Triggers;
 using UnityEngine;
+using static Studio.OIBoneInfo;
 
 internal static class Extensions
 {
@@ -111,6 +113,12 @@ internal static class Extensions
 		}
 		*/
 	}
+
+	public static IEnumerable<FKCtrl.TargetInfo> GetTargetInfosForGroup(this FKCtrl fkCtrl, OIBoneInfo.BoneGroup group)
+	{
+		return fkCtrl.listBones.Where(l => l.group == group);
+	}
+
 	public static void ResetFkBone(this FKCtrl fkCtrl, string boneName, bool resetToZero = false)
 	{
 		var targetBone = fkCtrl.listBones
@@ -183,6 +191,8 @@ internal static class Extensions
 		// If no matching active FK bone group is found, return false
 		return false;
 	}
+
+	public static int GetHandNumber(this BoneGroup boneGroup) => boneGroup == BoneGroup.LeftHand ? 0 : 1;
 
 	public static IKEffector GetEffectorByTargetName(this OCIChar character, string targetName)
 	{

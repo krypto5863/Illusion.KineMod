@@ -14,6 +14,8 @@ namespace Core_KineMod.UGUIResources
 		private static KineModController Controller => CurrentCharacter.charInfo.GetComponent<KineModController>();
 		internal static void SetupEffectorsPage(GameObject modPanel)
 		{
+			modPanel = modPanel.transform.FindLoop("EffectorPage").gameObject;
+
 			var chainSectionTemplate = modPanel.transform.FindLoop("ChainSection");
 
 			var enforceSettingsToggle = modPanel.transform.FindLoop("EnforceSettings").GetComponentInChildren<Toggle>();
