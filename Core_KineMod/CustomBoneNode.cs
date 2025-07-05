@@ -9,7 +9,8 @@ namespace Core_KineMod.UGUIResources
 #if KKS
 			new CustomBoneNode("cf_s_wrist_L", "L. Wrist", 4, 1), new CustomBoneNode("cf_s_wrist_R", "R. Wrist", 3, 1)
 #elif HS2
-			new CustomBoneNode("cf_J_ArmLow01_s_L", "L. Forearm", 4, 1), new CustomBoneNode("cf_J_ArmLow01_s_R", "R. Forearm", 3, 1),
+			//Forearms overlaps with elbows, it should not be enabled by default.
+			new CustomBoneNode("cf_J_ArmLow01_s_L", "L. Forearm", 24, 1), new CustomBoneNode("cf_J_ArmLow01_s_R", "R. Forearm", 23, 1),
 			new CustomBoneNode("cf_J_ArmLow02_s_L", "L. Wrist", 4, 1), new CustomBoneNode("cf_J_ArmLow02_s_R", "R. Wrist", 3, 1)
 #endif
 		};
