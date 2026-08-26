@@ -15,6 +15,8 @@ using static Studio.OIBoneInfo;
 
 internal class KineModController : CharaCustomFunctionController
 {
+	private OCIChar _character;
+
 	public Dictionary<string, CustomBoneGroup> CustomNodeGroups { get; private set; } =
 			CustomBoneInfo.BoneNames
 			.ToDictionary(
@@ -53,8 +55,15 @@ internal class KineModController : CharaCustomFunctionController
 	{
 		base.Update();
 
+		// GetOCIChar scans every Studio object, so avoid it entirely for controllers
+		// that have no per-frame KineMod work to do.
+		if (!SystemActive || !ChaControl.visibleAll)
+		{
+			return;
+		}
+
 		//Avoids a possible null ref when doing stuff.
-		var character = ChaControl.GetOCIChar();
+		var character = _character ?? (_character = ChaControl.GetOCIChar());
 		var oiCharInfo = character?.oiCharInfo;
 		if (oiCharInfo == null)
 		{
