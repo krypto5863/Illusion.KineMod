@@ -152,6 +152,7 @@ internal static class Hooks
 internal static class FkCtrlPatch
 {
 	private static readonly Dictionary<FKCtrl, FullBodyBipedIK> FkSlaveToIk = new Dictionary<FKCtrl, FullBodyBipedIK>();
+	private static readonly Dictionary<FKCtrl, IKSolver.UpdateDelegate> IkPreReadCallbacks = new Dictionary<FKCtrl, IKSolver.UpdateDelegate>();
 	internal static readonly Dictionary<FKCtrl, NeckLookControllerVer2> NeckLookControllers = new Dictionary<FKCtrl, NeckLookControllerVer2>();
 
 	[HarmonyReversePatch(HarmonyReversePatchType.Snapshot)]
@@ -181,18 +182,39 @@ internal static class FkCtrlPatch
 
 	[HarmonyPostfix]
 	[HarmonyPatch(typeof(FKCtrl), nameof(FKCtrl.InitBones))]
-	private static void SubToIkPreUpdate(FKCtrl __instance)
+	private static void SubToIkPreUpdate(FKCtrl __instance, OCIChar __0)
 	{
 		var neckLook = __instance.gameObject.GetComponentInChildren<NeckLookControllerVer2>();
 		NeckLookControllers[__instance] = neckLook;
 
 		var finalIk = __instance.gameObject.GetComponentInChildren<FullBodyBipedIK>();
-		finalIk.solver.OnPreRead += () =>
+		if (FkSlaveToIk.TryGetValue(__instance, out var previousIk) &&
+			IkPreReadCallbacks.TryGetValue(__instance, out var previousCallback))
 		{
+			previousIk.solver.OnPreRead -= previousCallback;
+		}
+
+		var controller = __0.charInfo.GetComponent<KineModController>();
+		IKSolver.UpdateDelegate callback = () =>
+		{
+			// Character controllers can be attached after the first FK initialization.
+			if (controller == null)
+			{
+				controller = __0.charInfo.GetComponent<KineModController>();
+			}
+
+			if (controller == null || !controller.SystemActive || !__0.charInfo.visibleAll)
+			{
+				return;
+			}
+
 			EarlyNeckUpdate(__instance);
 			FakeLateUpdate(__instance);
 		};
+
+		finalIk.solver.OnPreRead += callback;
 		FkSlaveToIk[__instance] = finalIk;
+		IkPreReadCallbacks[__instance] = callback;
 	}
 	private static void EarlyNeckUpdate(FKCtrl __instance, bool returnValue = true)
 	{
